@@ -46,6 +46,7 @@ const Home = (): JSX.Element => {
 
   return (
     <ProductList>
+      <div data-testid="cart-product-quantity">
       {products.map(product => (
         <li key={product.id}>
           <img src={product.image} alt={product.title} />
@@ -65,7 +66,7 @@ const Home = (): JSX.Element => {
           </button>
         </li>
       ))}
-      
+      </div>
     </ProductList>
   );
 };

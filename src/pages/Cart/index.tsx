@@ -39,11 +39,13 @@ const Cart = (): JSX.Element => {
   function handleProductDecrement(product: Product) {
     const productId:number = product.id 
     const amount:number = product.amount - 1
-    updateProductAmount({productId, amount})
+    if (product.amount < 1){
+      return
+    } else updateProductAmount({productId, amount})
   }
 
   function handleRemoveProduct(productId: number) {
-    // TODO
+    removeProduct(productId)
   }
 
   return (
@@ -60,7 +62,7 @@ const Cart = (): JSX.Element => {
         </thead>
         <tbody>
         {cart.map(cartProduct => (
-          <tr key={cartProduct.id} data-testid="cartProduct">
+          <tr key={cartProduct.id} data-testid="product">
               <td>
                 <img src={cartProduct.image} alt={cartProduct.title} />
               </td>
@@ -72,7 +74,7 @@ const Cart = (): JSX.Element => {
                 <div>
                   <button
                     type="button"
-                    data-testid="decrement-cartProduct"
+                    data-testid="decrement-product"
                     disabled={cartProduct.amount <= 1}
                     onClick={() => handleProductDecrement(cartProduct)}
                   >
@@ -80,13 +82,13 @@ const Cart = (): JSX.Element => {
                   </button>
                   <input
                     type="text"
-                    data-testid="cartProduct-amount"
+                    data-testid="product-amount"
                     readOnly
                     value={cartProduct.amount}
                   />
                   <button
                     type="button"
-                    data-testid="increment-cartProduct"
+                    data-testid="increment-product"
                     onClick={() => handleProductIncrement(cartProduct)}
                   >
                     <MdAddCircleOutline size={20} />
@@ -99,8 +101,8 @@ const Cart = (): JSX.Element => {
               <td>
                 <button
                   type="button"
-                  data-testid="remove-cartProduct"
-                // onClick={() => handleRemoveProduct(cartProduct.id)}
+                  data-testid="remove-product"
+                  onClick={() => handleRemoveProduct(cartProduct.id)}
                 >
                   <MdDelete size={20} />
                 </button>

@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   MdDelete,
   MdAddCircleOutline,
@@ -17,31 +16,29 @@ interface Product {
   amount: number;
 }
 
+
 const Cart = (): JSX.Element => {
   const { cart, removeProduct, updateProductAmount } = useCart();
 
-  // const cartFormatted = cart.map(product => {
-  //   product.price
-  // })
+  const cartFormatted = cart.map(product => ({
+    ...product,
+    priceFormatted: formatPrice(product.price),
+    subTotal: formatPrice(product.price * product.amount)
+  }))
+
   const total =
     formatPrice(
       cart.reduce((sumTotal, product) => {
-        return (sumTotal + product.price*product.amount)
+        return (sumTotal + product.price * product.amount)
       }, 0)
     )
 
   function handleProductIncrement(product: Product) {
-    const productId:number = product.id 
-    const amount:number = product.amount + 1
-    updateProductAmount({productId, amount})
+    updateProductAmount({ productId: product.id, amount: product.amount + 1 })
   }
 
   function handleProductDecrement(product: Product) {
-    const productId:number = product.id 
-    const amount:number = product.amount - 1
-    if (product.amount < 1){
-      return
-    } else updateProductAmount({productId, amount})
+    updateProductAmount({ productId: product.id, amount: product.amount - 1 })
   }
 
   function handleRemoveProduct(productId: number) {
@@ -61,14 +58,14 @@ const Cart = (): JSX.Element => {
           </tr>
         </thead>
         <tbody>
-        {cart.map(cartProduct => (
-          <tr key={cartProduct.id} data-testid="product">
+          {cartFormatted.map(cartProduct => (
+            <tr key={cartProduct.id} data-testid="product">
               <td>
                 <img src={cartProduct.image} alt={cartProduct.title} />
               </td>
               <td>
                 <strong>{cartProduct.title}</strong>
-                <span>{formatPrice(cartProduct.price)}</span>
+                <span>{cartProduct.priceFormatted}</span>
               </td>
               <td>
                 <div>
@@ -96,7 +93,7 @@ const Cart = (): JSX.Element => {
                 </div>
               </td>
               <td>
-                <strong>{formatPrice(cartProduct.price*cartProduct.amount)}</strong>
+                <strong>{cartProduct.subTotal}</strong>
               </td>
               <td>
                 <button
@@ -108,7 +105,7 @@ const Cart = (): JSX.Element => {
                 </button>
               </td>
             </tr>
-        ))}
+          ))}
         </tbody>
 
       </ProductTable>
